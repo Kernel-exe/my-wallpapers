@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galeria de Wallpapers</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .gallery a {
+      display: block;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .gallery a:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>Galeria de Wallpapers</h1>
+
+  <form id="form-wallpaper">
+    <input type="text" id="imgurLink" placeholder="Cole o link direto da imagem do Imgur..." required />
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="footer">
+    Feito com ❤️ | Hosteado no GitHub Pages
+  </div>
+
+  <script>
+    const form = document.getElementById('form-wallpaper');
+    const gallery = document.getElementById('gallery');
+    const input = document.getElementById('imgurLink');
+
+    // Carrega do localStorage
+    let wallpapers = JSON.parse(localStorage.getItem('wallpapers')) || [
+      "https://i.imgur.com/w1nQ1Wg.jpeg",
+      "https://i.imgur.com/ViJ1kNd.jpeg",
+      "https://i.imgur.com/tR1gk8A.jpeg"
+    ];
+
+    // Renderiza as imagens
+    function renderGallery() {
+      gallery.innerHTML = '';
+      wallpapers.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link;
+        a.target = '_blank';
+        const img = document.createElement('img');
+        img.src = link;
+        img.alt = "Wallpaper";
+        a.appendChild(img);
+        gallery.appendChild(a);
+      });
+    }
+
+    // Evento de envio do formulário
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const link = input.value.trim();
+      if (link && link.startsWith('http') && (link.endsWith('.jpg') || link.endsWith('.png') || link.endsWith('.jpeg') || link.endsWith('.webp'))) {
+        wallpapers.unshift(link); // Adiciona ao início
+        localStorage.setItem('wallpapers', JSON.stringify(wallpapers));
+        input.value = '';
+        renderGallery();
+      } else {
+        alert('Insira um link direto para a imagem (terminando em .jpg, .png, etc).');
+      }
+    });
+
+    // Inicializa
+    renderGallery();
+  </script>
+</body>
+</html>
 
